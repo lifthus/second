@@ -6,21 +6,21 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiProperty } from '@nestjs/swagger';
+import { ApiConsumes } from '@nestjs/swagger';
 import { FileUploadDto } from 'src/api/file/file.dto';
 import { FileService } from 'src/api/file/file.service';
 
 @Controller('file')
 export class FileController {
-  constructor(fileService: FileService) {}
+  constructor(private readonly fileService: FileService) {}
 
-  @Post('xlsx')
+  @Post('complex-info')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
   uploadXLSXFile(
     @Body() body: FileUploadDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(file);
+    this.fileService.parseComplexInfoAndPersist(file);
   }
 }
