@@ -21,7 +21,7 @@
 ## 2. Domain
 
 <p align="center">
-<img src="https://github.com/lifthus/second/assets/108582413/192d7d53-9956-41b1-8f01-cf24c0c6ec1f" alt="the second ERD" width="750" />
+<img src="https://github.com/lifthus/second/assets/108582413/ce6ff153-3a37-4ef4-bf02-c0eaa8118444" alt="the second ERD" width="750" />
 </p>
 
 ## 3. Database
@@ -29,7 +29,7 @@
 ### 3.1. Entity Relationship Diagram
 
 <p align="center">
-<img src="https://github.com/lifthus/second/assets/108582413/beb15437-ac91-4a7c-837e-91ccd61edb34" alt="the second ERD" width="750" />
+<img src="https://github.com/lifthus/second/assets/108582413/a3e920ff-b7cf-4cfc-b0a7-92208eab8790" alt="the second ERD" width="750" />
 </p>
 
 ### 3.2. Data Definition Language
