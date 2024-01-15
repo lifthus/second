@@ -22,6 +22,16 @@ export class PrismaCustomerRepository extends CustomerRepository {
     );
   }
 
+  async findGrade(grade: string): Promise<CustomerGrade> {
+    const pGrade = await this.prisma.customerGrade.findUnique({
+      where: { grade: grade },
+    });
+    if (pGrade === null) {
+      throw new Error('Grade not found');
+    }
+    return new CustomerGrade(pGrade.id, pGrade.grade);
+  }
+
   async save(customer: Customer): Promise<Customer> {
     const pGrade = await this.prisma.customerGrade.findUnique({
       where: { grade: customer.getGrade().getGrade() },

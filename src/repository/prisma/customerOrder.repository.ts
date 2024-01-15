@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import {
   CustomerOrder,
   CustomerOrderType,
@@ -9,7 +8,7 @@ import { CustomerOrderRepository } from 'src/repository/customerOrder.repository
 import { PrismaService } from 'src/repository/prisma/prisma.service';
 
 @Injectable()
-export abstract class PrismaCustomerOrderRepository extends CustomerOrderRepository {
+export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
   constructor(private prisma: PrismaService) {
     super();
   }
@@ -66,6 +65,13 @@ export abstract class PrismaCustomerOrderRepository extends CustomerOrderReposit
         pco.orderAmount,
       );
     });
+  }
+
+  async findType(type: string): Promise<CustomerOrderType> {
+    const pOrderType = await this.prisma.customerOrderType.findUnique({
+      where: { orderType: type },
+    });
+    return new CustomerOrderType(pOrderType.id, pOrderType.orderType);
   }
 
   async save(customerOrder: CustomerOrder): Promise<CustomerOrder> {
