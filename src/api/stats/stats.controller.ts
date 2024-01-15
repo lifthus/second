@@ -10,7 +10,7 @@ export class StatsController {
   @ApiQuery({
     name: 'year',
     required: false,
-    description: 'Year to get monthly stats for. it is optional',
+    description: 'Year to get monthly stats for. it is optional.',
   })
   async getMonthlyStats(@Query('year') year: string) {
     return await this.statsService.getMonthlyStats(Number(year) || undefined);
