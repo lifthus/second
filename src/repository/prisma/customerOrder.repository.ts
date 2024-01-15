@@ -13,13 +13,18 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
     super();
   }
 
-  async findAllByYear(year: number): Promise<CustomerOrder[]> {
+  async findAll(
+    year: number | undefined = undefined,
+  ): Promise<CustomerOrder[]> {
     const pCustomerOrders = await this.prisma.customerOrder.findMany({
       where: {
-        orderDate: {
-          gte: new Date(year, 0, 1),
-          lt: new Date(year + 1, 0, 1),
-        },
+        orderDate:
+          year !== undefined
+            ? {
+                gte: new Date(year, 0, 1),
+                lt: new Date(year + 1, 0, 1),
+              }
+            : {},
       },
       include: { orderType: true },
     });

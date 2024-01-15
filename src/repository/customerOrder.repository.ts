@@ -7,7 +7,7 @@ import { CustomerOrderQuerySpec } from 'src/model/CustomerOrder/QuerySpec';
 
 @Injectable()
 export abstract class CustomerOrderRepository {
-  abstract findAllByYear(year: number): Promise<CustomerOrder[]>;
+  abstract findAll(year: number | undefined): Promise<CustomerOrder[]>;
   abstract findAllByQuerySpec(
     querySpec: CustomerOrderQuerySpec,
   ): Promise<CustomerOrder[]>;
