@@ -5,10 +5,11 @@ import { CustomerOrderController } from './customer-order/customer-order.control
 import { FileService } from './file/file.service';
 import { RepositoryModule } from 'src/repository/repository.module';
 import { StatsService } from './stats/stats.service';
+import { CustomerOrderService } from './customer-order/customer-order.service';
 
 @Module({
   imports: [RepositoryModule],
   controllers: [FileController, StatsController, CustomerOrderController],
-  providers: [FileService, StatsService],
+  providers: [FileService, StatsService, CustomerOrderService],
 })
 export class ApiModule {}

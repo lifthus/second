@@ -42,24 +42,30 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
   async findAllByQuerySpec(
     qs: CustomerOrderQuerySpec,
   ): Promise<CustomerOrder[]> {
-    const { startDate, endDate, orderType, customerId, pageSize, pageNumber } =
-      qs;
+    const { startDate, endDate, orderType, customerId, pageSize, pageNo } = qs;
+    const pOrderType =
+      orderType !== undefined
+        ? await this.prisma.customerOrderType.findUnique({
+            where: { orderType: orderType },
+          })
+        : undefined;
     const pCustomerOrders = await this.prisma.customerOrder.findMany({
       where: {
         orderDate: {
           gte: startDate,
-          lt: endDate,
+          lte: endDate,
         },
         orderTypeId: {
-          equals: orderType?.getId(),
+          equals: pOrderType?.id,
         },
         customerId: {
           equals: customerId,
         },
       },
       include: { orderType: true },
-      skip: pageSize * (pageNumber - 1),
+      skip: pageSize * (pageNo - 1),
       take: pageSize,
+      orderBy: { orderDate: 'desc' },
     });
     return pCustomerOrders.map((pco) => {
       return new CustomerOrder(
@@ -81,7 +87,7 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
 
   async save(customerOrder: CustomerOrder): Promise<CustomerOrder> {
     const pOrderTYpe = await this.prisma.customerOrderType.findUnique({
-      where: { orderType: customerOrder.type.type },
+      where: { orderType: customerOrder.getType().type },
     });
     if (pOrderTYpe === null) {
       throw new Error('Order Type not found');
@@ -101,8 +107,8 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
           id: customerOrder.getId(),
           customerId: customerOrder.getCustomerId(),
           orderType: { connect: { id: pOrderTYpe.id } },
-          orderDate: customerOrder.date,
-          orderAmount: customerOrder.amount,
+          orderDate: customerOrder.getDate(),
+          orderAmount: customerOrder.getAmount(),
         },
       });
     } else {
@@ -112,8 +118,8 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
         data: {
           customerId: customerOrder.getCustomerId(),
           orderType: { connect: { id: pOrderTYpe.id } },
-          orderDate: customerOrder.date,
-          orderAmount: customerOrder.amount,
+          orderDate: customerOrder.getDate(),
+          orderAmount: customerOrder.getAmount(),
         },
       });
     }

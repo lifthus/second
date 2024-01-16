@@ -13,9 +13,9 @@ export class CustomerOrderStats {
 
     // traverse each order
     for (const order of this.orders) {
-      const year = order.date.getFullYear();
-      const month = order.date.getMonth() + 1;
-      const orderType = order.type.type; // order or refund
+      const year = order.getDate().getFullYear();
+      const month = order.getDate().getMonth() + 1;
+      const orderType = order.getType().type; // order or refund
 
       // initialize year and month if not exists
       const y = (ymo[year] = ymo[year] || {});
@@ -26,9 +26,9 @@ export class CustomerOrderStats {
 
       // accumulate order or refund amount
       if (orderType === 'order') {
-        m.order = m.order.add(order.amount);
+        m.order = m.order.add(order.getAmount());
       } else if (orderType === 'refund') {
-        m.refund = m.refund.add(order.amount);
+        m.refund = m.refund.add(order.getAmount());
       } else {
         throw new Error('invalid order type');
       }

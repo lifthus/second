@@ -17,13 +17,13 @@ export class CustomerOrder {
     return this.customerId;
   }
 
-  get date(): Date {
+  getDate(): Date {
     return this.orderDate;
   }
-  get type(): CustomerOrderType {
+  getType(): CustomerOrderType {
     return this.orderType;
   }
-  get amount(): Decimal {
+  getAmount(): Decimal {
     return this.orderAmount;
   }
 }
