@@ -43,12 +43,14 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
     qs: CustomerOrderQuerySpec,
   ): Promise<CustomerOrder[]> {
     const { startDate, endDate, orderType, customerId, pageSize, pageNo } = qs;
+
     const pOrderType =
       orderType !== undefined
         ? await this.prisma.customerOrderType.findUnique({
             where: { orderType: orderType },
           })
         : undefined;
+
     const pCustomerOrders = await this.prisma.customerOrder.findMany({
       where: {
         orderDate: {
@@ -67,6 +69,7 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
       take: pageSize,
       orderBy: { orderDate: 'desc' },
     });
+
     return pCustomerOrders.map((pco) => {
       return new CustomerOrder(
         pco.id,
