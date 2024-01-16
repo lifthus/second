@@ -21,6 +21,6 @@ export class FileController {
     @Body() body: FileUploadDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    this.fileService.parseComplexInfoAndPersist(file);
+    return this.fileService.parseComplexInfoAndPersist(file);
   }
 }

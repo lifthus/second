@@ -2,7 +2,12 @@ import { Decimal } from '@prisma/client/runtime/library';
 
 export function decimalToCommaSeparatedString(d: Decimal): string {
   let ds = d.toString();
-  let decimalPointIndex = d.toString().indexOf('.');
+
+  let negative: boolean;
+  if (ds.startsWith('-')) negative = true;
+  ds = ds.replace('-', '');
+
+  let decimalPointIndex = ds.indexOf('.');
   decimalPointIndex = decimalPointIndex === -1 ? ds.length : decimalPointIndex;
   const fractPart = ds.slice(decimalPointIndex);
 
@@ -16,5 +21,7 @@ export function decimalToCommaSeparatedString(d: Decimal): string {
     result += rds[i];
   }
 
-  return result.split('').reverse().join('') + fractPart;
+  return (
+    (negative ? '-' : '') + result.split('').reverse().join('') + fractPart
+  );
 }

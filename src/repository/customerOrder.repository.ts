@@ -13,5 +13,6 @@ export abstract class CustomerOrderRepository {
   ): Promise<CustomerOrder[]>;
   abstract findType(type: string): Promise<CustomerOrderType>;
   abstract getTypeMap(): Promise<Map<string, CustomerOrderType>>;
-  abstract save(CustomerOrder: CustomerOrder): Promise<CustomerOrder>;
+  abstract save(customerOrder: CustomerOrder): Promise<CustomerOrder>;
+  abstract insertMany(customerOrders: CustomerOrder[]): Promise<Number>;
 }

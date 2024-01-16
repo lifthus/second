@@ -21,5 +21,10 @@ describe('Decimal string utils', () => {
     it('should return "1,000"', () => {
       expect(decimalToCommaSeparatedString(new Decimal(1000))).toBe('1,000');
     });
+    it('should return "-123,456', () => {
+      expect(decimalToCommaSeparatedString(new Decimal(-123456))).toBe(
+        '-123,456',
+      );
+    });
   });
 });

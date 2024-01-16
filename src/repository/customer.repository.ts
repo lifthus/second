@@ -7,4 +7,5 @@ export abstract class CustomerRepository {
   abstract findGrade(grade: string): Promise<CustomerGrade>;
   abstract getGradeMap(): Promise<Map<string, CustomerGrade>>;
   abstract save(customer: Customer): Promise<Customer>;
+  abstract insertMany(customers: Customer[]): Promise<Number>;
 }

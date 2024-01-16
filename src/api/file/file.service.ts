@@ -43,14 +43,12 @@ export class FileService {
     const customers = await this.JSONToCustomerModel(customerInfo);
     const customerOrders = await this.JSONToCustomerOrderModel(orderInfo);
 
-    const [savedCustomers, savedCustomerOrders] = await Promise.all([
-      customers.map(async (customer) => {
-        return await this.customerRepository.save(customer);
-      }),
-      customerOrders.map(async (order) => {
-        return await this.customerOrderRepository.save(order);
-      }),
-    ]);
+    const savedCustomersCount =
+      await this.customerRepository.insertMany(customers);
+    const savedCustomerOrdersCount =
+      await this.customerOrderRepository.insertMany(customerOrders);
+
+    return { savedCustomersCount, savedCustomerOrdersCount };
   }
 
   private async convertXlsxToJSON(sheet: xlsx.WorkBook): Promise<{

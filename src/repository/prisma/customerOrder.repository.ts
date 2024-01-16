@@ -115,7 +115,7 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
         data: {
           id: customerOrder.getId(),
           customerId: customerOrder.getCustomerId(),
-          orderType: { connect: { id: pOrderTYpe.id } },
+          orderTypeId: pOrderTYpe.id,
           orderDate: customerOrder.getDate(),
           orderAmount: customerOrder.getAmount(),
         },
@@ -126,7 +126,7 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
         where: { id: customerOrder.getId() },
         data: {
           customerId: customerOrder.getCustomerId(),
-          orderType: { connect: { id: pOrderTYpe.id } },
+          orderTypeId: pOrderTYpe.id,
           orderDate: customerOrder.getDate(),
           orderAmount: customerOrder.getAmount(),
         },
@@ -140,5 +140,18 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
       new CustomerOrderType(pOrderTYpe.id, pOrderTYpe.orderType),
       pCustomerOrder.orderAmount,
     );
+  }
+
+  async insertMany(customerOrders: CustomerOrder[]): Promise<Number> {
+    const batchPayload = await this.prisma.customerOrder.createMany({
+      data: customerOrders.map((co) => ({
+        customerId: co.getCustomerId(),
+        orderDate: co.getDate(),
+        orderTypeId: co.getType().getId(),
+        orderAmount: co.getAmount(),
+      })),
+    });
+
+    return batchPayload.count;
   }
 }

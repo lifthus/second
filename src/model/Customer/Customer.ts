@@ -21,6 +21,9 @@ export class CustomerGrade {
     private id: number | undefined,
     private grade: string,
   ) {}
+  getId(): number | undefined {
+    return this.id;
+  }
   getGrade(): string {
     return this.grade;
   }

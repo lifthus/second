@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Customer, CustomerGrade } from 'src/model/Customer/Customer';
-import { Prisma } from '@prisma/client';
 import { CustomerRepository } from 'src/repository/customer.repository';
 import { PrismaService } from 'src/repository/prisma/prisma.service';
 
@@ -59,7 +58,6 @@ export class PrismaCustomerRepository extends CustomerRepository {
     if (pcustomer === null) {
       // if the id is not set or the customer isn't persisted yet,
       // create a new customer.
-      var a: Prisma.CustomerCreateInput;
       pcustomer = await this.prisma.customer.create({
         data: {
           id: customer.getId(),
@@ -79,5 +77,16 @@ export class PrismaCustomerRepository extends CustomerRepository {
     }
 
     return new Customer(pcustomer.id, pcustomer.name, customer.getGrade());
+  }
+
+  async insertMany(customers: Customer[]): Promise<Number> {
+    const batchPayload = await this.prisma.customer.createMany({
+      data: customers.map((c) => ({
+        id: c.getId(),
+        name: c.getName(),
+        gradeId: c.getGrade().getId(),
+      })),
+    });
+    return batchPayload.count;
   }
 }

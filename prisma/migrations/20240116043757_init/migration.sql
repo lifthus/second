@@ -41,4 +41,7 @@ CREATE TABLE `CustomerOrderType` (
 ALTER TABLE `Customer` ADD CONSTRAINT `Customer_gradeId_fkey` FOREIGN KEY (`gradeId`) REFERENCES `CustomerGrade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `CustomerOrder` ADD CONSTRAINT `CustomerOrder_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `Customer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `CustomerOrder` ADD CONSTRAINT `CustomerOrder_orderTypeId_fkey` FOREIGN KEY (`orderTypeId`) REFERENCES `CustomerOrderType`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
