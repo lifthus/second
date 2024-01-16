@@ -12,5 +12,6 @@ export abstract class CustomerOrderRepository {
     querySpec: CustomerOrderQuerySpec,
   ): Promise<CustomerOrder[]>;
   abstract findType(type: string): Promise<CustomerOrderType>;
+  abstract getTypeMap(): Promise<Map<string, CustomerOrderType>>;
   abstract save(CustomerOrder: CustomerOrder): Promise<CustomerOrder>;
 }

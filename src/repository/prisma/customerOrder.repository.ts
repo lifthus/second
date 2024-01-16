@@ -85,6 +85,15 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
     return new CustomerOrderType(pOrderType.id, pOrderType.orderType);
   }
 
+  async getTypeMap(): Promise<Map<string, CustomerOrderType>> {
+    const pOrderTypes = await this.prisma.customerOrderType.findMany();
+    const typeMap = new Map<string, CustomerOrderType>();
+    pOrderTypes.forEach((ot) => {
+      typeMap.set(ot.orderType, new CustomerOrderType(ot.id, ot.orderType));
+    });
+    return typeMap;
+  }
+
   async save(customerOrder: CustomerOrder): Promise<CustomerOrder> {
     const pOrderTYpe = await this.prisma.customerOrderType.findUnique({
       where: { orderType: customerOrder.getType().type },

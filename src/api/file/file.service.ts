@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime/library';
-import { Customer } from 'src/model/Customer/Customer';
+import { Customer, CustomerGrade } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 import { CustomerRepository } from 'src/repository/customer.repository';
 import { CustomerOrderRepository } from 'src/repository/customerOrder.repository';
@@ -11,6 +11,7 @@ type CustomerSheet = {
   고객명: string;
   고객등급: string;
 };
+
 type CustomerOrderSheet = {
   '주문고객 id': string;
   주문일자: string;
@@ -28,6 +29,7 @@ export class FileService {
   async parseComplexInfoAndPersist(file: Express.Multer.File) {
     const sheetInfo = xlsx.read(file.buffer);
 
+    // convert given file to json objects
     let customerInfo: CustomerSheet[], orderInfo: CustomerOrderSheet[];
     if (file.originalname.endsWith('.xlsx')) {
       const sheetJSON = await this.convertXlsxToJSON(sheetInfo);
@@ -36,6 +38,8 @@ export class FileService {
     } else {
       throw new Error('Invalid file type');
     }
+
+    // convert json objects to domain models
     const customers = await this.JSONToCustomerModel(customerInfo);
     const customerOrders = await this.JSONToCustomerOrderModel(orderInfo);
 
@@ -71,10 +75,14 @@ export class FileService {
   private async JSONToCustomerModel(
     sheetjson: CustomerSheet[],
   ): Promise<Customer[]> {
+    const gradeMap = await this.customerRepository.getGradeMap();
     return await Promise.all(
       sheetjson.map(async (info) => {
-        const grade = await this.customerRepository.findGrade(info['고객등급']);
-        return new Customer(BigInt(info['고객 id']), info['고객명'], grade);
+        return new Customer(
+          BigInt(info['고객 id']),
+          info['고객명'],
+          gradeMap.get(info['고객등급']),
+        );
       }),
     );
   }
@@ -82,16 +90,14 @@ export class FileService {
   private async JSONToCustomerOrderModel(
     sheetjson: CustomerOrderSheet[],
   ): Promise<CustomerOrder[]> {
+    const typeMap = await this.customerOrderRepository.getTypeMap();
     return await Promise.all(
       sheetjson.map(async (info) => {
-        const orderType = await this.customerOrderRepository.findType(
-          info['주문타입'],
-        );
         return new CustomerOrder(
           undefined,
           BigInt(info['주문고객 id']),
           new Date(info['주문일자']),
-          orderType,
+          typeMap.get(info['주문타입']),
           new Decimal(info['주문금액'].replaceAll(',', '')),
         );
       }),

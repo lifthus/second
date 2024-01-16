@@ -32,6 +32,15 @@ export class PrismaCustomerRepository extends CustomerRepository {
     return new CustomerGrade(pGrade.id, pGrade.grade);
   }
 
+  async getGradeMap(): Promise<Map<string, CustomerGrade>> {
+    const pGrades = await this.prisma.customerGrade.findMany();
+    const gradeMap = new Map<string, CustomerGrade>();
+    pGrades.forEach((g) => {
+      gradeMap.set(g.grade, new CustomerGrade(g.id, g.grade));
+    });
+    return gradeMap;
+  }
+
   async save(customer: Customer): Promise<Customer> {
     const pGrade = await this.prisma.customerGrade.findUnique({
       where: { grade: customer.getGrade().getGrade() },
