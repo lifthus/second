@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Customer, CustomerGrade } from 'src/model/Customer/Customer';
-import { Customer as PCustomer, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { CustomerRepository } from 'src/repository/customer.repository';
 import { PrismaService } from 'src/repository/prisma/prisma.service';
 
