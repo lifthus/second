@@ -1,30 +1,45 @@
+import { Customer } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 
 export class CustomerOrderDTO {
   private constructor(
     public readonly id: string,
-    public readonly customerId: string,
     public readonly orderDate: Date,
+    public readonly customerName: string,
+    public readonly customerGrade: string,
     public readonly orderType: string,
     public readonly orderAmount: string,
   ) {}
 
-  public static fromModel(co: CustomerOrder): CustomerOrderDTO {
+  public static fromModel(co: CustomerOrder, c: Customer): CustomerOrderDTO {
     return new CustomerOrderDTO(
       co.getId().toString(),
-      co.getCustomerId().toString(),
       co.getDate(),
+      c.getName(),
+      c.getGrade().getGrade(),
       co.getType().type,
       co.getAmount().toString(),
     );
   }
 
-  public static fromModels(cos: CustomerOrder[]): CustomerOrderDTO[] {
-    return cos.map((item) => {
-      return this.fromModel(item);
-    });
+  public toKoreanJSON(): CustomerOrderKoreanJSON {
+    return {
+      주문일자: this.orderDate,
+      주문고객명: this.customerName,
+      '주문고객 등급': this.customerGrade,
+      주문타입: this.orderType,
+      주문금액: this.orderAmount,
+    };
   }
 }
+
+export type CustomerOrderKoreanJSON = {
+  주문일자: Date;
+  주문고객명: string;
+  '주문고객 등급': string;
+  주문타입: string;
+  주문금액: string;
+};
 
 export class CustomerOrderQuerySpecDTO {
   public readonly startDate: Date | undefined;
