@@ -9,14 +9,11 @@ export class CustomerOrderQuerySpec {
   readonly pageSize: number = 50;
   readonly pageNo: number = 1;
   constructor(dto: CustomerOrderQuerySpecDTO) {
-    this.startDate = !isNaN(dto.startDate.getTime())
-      ? dto.startDate
-      : undefined;
-    this.endDate = !isNaN(dto.endDate.getTime()) ? dto.endDate : undefined;
+    this.startDate = dto.startDate;
+    this.endDate = dto.endDate;
     this.orderType = dto.orderType;
-    this.customerId =
-      dto.customerId !== undefined ? BigInt(dto.customerId) : undefined;
-    this.pageSize = Number(dto.pageSize) || 50;
-    this.pageNo = Number(dto.pageNo) || 1;
+    this.customerId = dto.customerId;
+    this.pageSize = dto.pageSize || 50;
+    this.pageNo = dto.pageNo || 1;
   }
 }

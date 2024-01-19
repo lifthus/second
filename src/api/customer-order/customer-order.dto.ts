@@ -1,11 +1,5 @@
 import { Transform } from 'class-transformer';
-import {
-  IsDate,
-  IsDecimal,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Customer } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 
