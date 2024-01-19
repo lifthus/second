@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBigInt } from 'src/api/decorator/validate/validate';
 import { Customer } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 
@@ -58,9 +59,15 @@ export class CustomerOrderQuerySpecDTO {
   @IsString()
   public readonly orderType: string | undefined;
 
-  @Transform(({ value }) => BigInt(value))
+  @Transform(({ value }) => {
+    try {
+      return BigInt(value);
+    } catch (e) {
+      return 'not bigint';
+    }
+  })
   @IsOptional()
-  @IsString()
+  @IsBigInt()
   public readonly customerId: bigint | undefined;
 
   @Transform(({ value }) => Number(value))
