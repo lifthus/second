@@ -1,5 +1,4 @@
 import { CustomerOrderQuerySpecDTO } from 'src/api/customer-order/customer-order.dto';
-import { CustomerOrderType } from 'src/model/CustomerOrder/customerOrder';
 
 export class CustomerOrderQuerySpec {
   readonly startDate: Date | undefined;

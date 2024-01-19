@@ -1,5 +1,5 @@
 import { Decimal } from '@prisma/client/runtime/library';
-import { CustomerOrder } from 'src/model/CustomerOrder/customerOrder';
+import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 import { decimalToCommaSeparatedString } from 'src/util/decimal/string';
 
 export class CustomerOrderStats {
