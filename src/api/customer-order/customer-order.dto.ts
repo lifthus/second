@@ -1,3 +1,11 @@
+import { Transform } from 'class-transformer';
+import {
+  IsDate,
+  IsDecimal,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Customer } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 
@@ -42,18 +50,32 @@ export type CustomerOrderKoreanJSON = {
 };
 
 export class CustomerOrderQuerySpecDTO {
+  @Transform(({ value }) => new Date(value))
+  @IsOptional()
+  @IsDate()
   public readonly startDate: Date | undefined;
+
+  @Transform(({ value }) => new Date(value))
+  @IsOptional()
+  @IsDate()
   public readonly endDate: Date | undefined;
+
+  @IsOptional()
+  @IsString()
   public readonly orderType: string | undefined;
-  public readonly customerId: string | undefined;
+
+  @Transform(({ value }) => BigInt(value))
+  @IsOptional()
+  @IsString()
+  public readonly customerId: bigint | undefined;
+
+  @Transform(({ value }) => Number(value))
+  @IsOptional()
+  @IsNumber()
   public readonly pageSize: number | undefined;
+
+  @Transform(({ value }) => Number(value))
+  @IsOptional()
+  @IsNumber()
   public readonly pageNo: number | undefined;
-  constructor(query: any) {
-    this.startDate = new Date(query.startDate);
-    this.endDate = new Date(query.endDate);
-    this.orderType = query.orderType;
-    this.customerId = query.customerId;
-    this.pageSize = Number(query.pageSize);
-    this.pageNo = Number(query.pageNo);
-  }
 }
