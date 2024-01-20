@@ -25,3 +25,7 @@ const NewServiceException = (
 export const InvalidFileException = (message?: string): ServiceException => {
   return NewServiceException(400, message || 'Invalid file');
 };
+
+export const NotFoundException = (message?: string): ServiceException => {
+  return NewServiceException(404, message || 'Not found');
+};

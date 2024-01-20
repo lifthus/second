@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { NotFoundException } from 'src/common/exception/service/ServiceException';
 import {
   CustomerOrder,
   CustomerOrderType,
@@ -50,6 +51,7 @@ export class PrismaCustomerOrderRepository extends CustomerOrderRepository {
             where: { orderType: orderType },
           })
         : undefined;
+    if (pOrderType === null) throw NotFoundException('Order type not found.');
 
     const pCustomerOrders = await this.prisma.customerOrder.findMany({
       where: {
