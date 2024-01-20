@@ -3,6 +3,7 @@ import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IsBigInt } from 'src/common/decorator/validate/validate';
 import { Customer } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
+import { decimalToCommaSeparatedString } from 'src/util/decimal/string';
 
 export class CustomerOrderDTO {
   private constructor(
@@ -21,7 +22,7 @@ export class CustomerOrderDTO {
       c.getName(),
       c.getGrade().getGrade(),
       co.getType().type,
-      co.getAmount().toString(),
+      decimalToCommaSeparatedString(co.getAmount()),
     );
   }
 
