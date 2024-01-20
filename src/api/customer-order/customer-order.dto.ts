@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
-import { IsBigInt } from 'src/api/decorator/validate/validate';
+import { IsBigInt } from 'src/common/decorator/validate/validate';
 import { Customer } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 

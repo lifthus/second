@@ -14,7 +14,7 @@ import { FileService } from 'src/api/file/file.service';
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @Post('complex-info')
+  @Post('complex-info/xlsx')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
   uploadXLSXFile(

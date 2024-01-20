@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime/library';
+import { InvalidFileException } from 'src/common/exception/service/ServiceException';
 import { Customer, CustomerGrade } from 'src/model/Customer/Customer';
 import { CustomerOrder } from 'src/model/CustomerOrder/CustomerOrder';
 import { CustomerRepository } from 'src/repository/customer.repository';
@@ -27,28 +28,36 @@ export class FileService {
   ) {}
 
   async parseComplexInfoAndPersist(file: Express.Multer.File) {
-    const sheetInfo = xlsx.read(file.buffer);
+    if (!file.originalname.endsWith('.xlsx'))
+      throw InvalidFileException('Only .xlsx spreadsheet file is allowed.');
 
-    // convert given file to json objects
-    let customerInfo: CustomerSheet[], orderInfo: CustomerOrderSheet[];
-    if (file.originalname.endsWith('.xlsx')) {
-      const sheetJSON = await this.convertXlsxToJSON(sheetInfo);
-      customerInfo = sheetJSON.customerInfo;
-      orderInfo = sheetJSON.orderInfo;
-    } else {
-      throw new Error('Invalid file type');
-    }
+    // file to spreadsheet info
+    const sheetInfo = this.readSpreadsheet(file);
+
+    // convert spreadsheet info to json objects
+    const sheetJSON = await this.convertXlsxToJSON(sheetInfo);
+    const customerInfo = sheetJSON.customerInfo;
+    const orderInfo = sheetJSON.orderInfo;
 
     // convert json objects to domain models
     const customers = await this.JSONToCustomerModel(customerInfo);
     const customerOrders = await this.JSONToCustomerOrderModel(orderInfo);
 
+    // first, insert the customers, because customerOrders has foreign key constraint about customer.
     const savedCustomersCount =
       await this.customerRepository.insertMany(customers);
     const savedCustomerOrdersCount =
       await this.customerOrderRepository.insertMany(customerOrders);
 
     return { savedCustomersCount, savedCustomerOrdersCount };
+  }
+
+  private readSpreadsheet(file: Express.Multer.File): xlsx.WorkBook {
+    try {
+      return xlsx.read(file.buffer);
+    } catch (e) {
+      throw InvalidFileException('Only .xlsx spreadsheet file is allowed.');
+    }
   }
 
   private async convertXlsxToJSON(sheet: xlsx.WorkBook): Promise<{
@@ -58,7 +67,7 @@ export class FileService {
     const customerInfo = xlsx.utils.sheet_to_json<CustomerSheet>(
       sheet.Sheets['customer'],
       {
-        raw: false,
+        raw: false, // this options is to get all values as string.
       },
     );
     const orderInfo = xlsx.utils.sheet_to_json<CustomerOrderSheet>(
